@@ -44,20 +44,20 @@
                 <form #editForm="ngForm" id="editForm" (ngSubmit)="updateMember()">
                     <h4 class="mt-2">Introduction</h4>
                 <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
-                </form>
-                <form>
+
+                
                     <h4 class="mt-2">Cuisines</h4>
                 <textarea class="form-control" [(ngModel)]="member.cuisines" name="cuisines" rows="6"></textarea>
-                </form>
+
                 <h4 class="mt-2">Location details</h4>
                 <div class="d-flex flex-row align-items-center">
                     <label for="city">City:</label>
-                    <input type="text" [(ngModel)] = "member.city" name="city" class="form-control mx-2">
+                    <input type="text" [(ngModel)]="member.city" name="city" class="form-control mx-2">
 
                     <label for="country">Country:</label>
-                    <input type="text" [(ngModel)] = "member.country" name="country" class="form-control mx-2">
+                    <input type="text" [(ngModel)]="member.country" name="country" class="form-control mx-2">
                 </div>
-                
+            </form>
             </tab>
             <tab heading="Edit Photos">
                 <p>Photo edits will go here!</p>
