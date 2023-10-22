@@ -26,6 +26,8 @@ public static class ApplicationServiceExtension
 
         services.AddScoped<IPhotoService, PhotoService>();
 
+        services.AddScoped<LogUserActivity>();
+        
         return services;
     }
 }

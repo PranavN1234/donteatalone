@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
+[ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/[controller]")]
 
@@ -30,9 +31,21 @@ public class UsersController: ControllerBase
     
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers(){
+    public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery]UserParams userParams){
+
+        var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+        var currentUser = await _userRepository.GetUserByUsernameAsync(username);
+
+        userParams.CurrentUsername = currentUser.UserName;
+
+        if(string.IsNullOrEmpty(userParams.Gender)){
+            userParams.Gender = currentUser.Gender == "male"?"female": "male";
+        }
         
-        var users = await _userRepository.GetMembersAsync();
+        var users = await _userRepository.GetMembersAsync(userParams);
+
+        Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
 
 
         return Ok(users);
@@ -47,7 +60,7 @@ public class UsersController: ControllerBase
     [HttpPut]
 
     public async Task<ActionResult> UpdateUser(MemberUpdateDTO memberUpdateDTO){
-        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
         var user = await _userRepository.GetUserByUsernameAsync(username);
 
@@ -64,7 +77,7 @@ public class UsersController: ControllerBase
 
     [HttpPost("add-photo")]
     public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file){
-         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+         var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
          var user = await _userRepository.GetUserByUsernameAsync(username);
 
@@ -95,7 +108,7 @@ public class UsersController: ControllerBase
     [HttpPut("set-main-photo/{photoId}")]
     public async Task<ActionResult> SetMainPhoto(int photoId){
 
-        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var username = User.FindFirst(ClaimTypes.Name)?.Value;
         var user = await _userRepository.GetUserByUsernameAsync(username);
 
         if(user==null) return NotFound();
@@ -124,7 +137,7 @@ public class UsersController: ControllerBase
     [HttpDelete("delete-photo/{photoId}")]
 
     public async Task<ActionResult> DeletePhoto(int photoId){
-        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var username = User.FindFirst(ClaimTypes.Name)?.Value;
         var user = await _userRepository.GetUserByUsernameAsync(username);
 
         var photo = user.Photos.FirstOrDefault(x=>x.Id == photoId);

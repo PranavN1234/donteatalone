@@ -9,6 +9,7 @@ using API.Interfaces;
 using AutoMapper;
 namespace API.Controllers;
 
+[ServiceFilter(typeof(LogUserActivity))]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController: ControllerBase
@@ -47,7 +48,9 @@ public class AccountController: ControllerBase
             Username = user.UserName,
             Token = _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(x=>x.isMain)?.Url,
-            Knownas = user.Knownas
+            Knownas = user.Knownas,
+            Gender = user.Gender
+
         };
         
     }
@@ -73,7 +76,8 @@ public class AccountController: ControllerBase
             Username = user.UserName,
             Token = _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(x=>x.isMain)?.Url,
-            Knownas = user.Knownas
+            Knownas = user.Knownas,
+            Gender = user.Gender
         };
 
 
