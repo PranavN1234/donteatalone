@@ -12,7 +12,10 @@
                 <fa-icon (click)="addLike(member)" [icon]="faHeart"></fa-icon>
             </button>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary"
+                routerLink="/members/{{member.userName}}"
+                [queryParams]="{tab: 'Messages'}"
+            >
                 <fa-icon [icon]="faEnvelope"></fa-icon>
             </button>
         </li>
