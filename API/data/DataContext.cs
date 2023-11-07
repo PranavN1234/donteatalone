@@ -16,6 +16,12 @@ public class DataContext : IdentityDbContext<Appuser, AppRole, int, IdentityUser
 
     public DbSet<Messages> Messages{get; set;}
 
+    public DbSet<Group> Groups{get; set;}
+
+    public DbSet<Connection> Connections{get; set;}
+
+
+
 
 
     protected override void OnModelCreating(ModelBuilder builder){
